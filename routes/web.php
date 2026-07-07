@@ -38,4 +38,4 @@ Route::middleware(['auth', 'role:pem_kecamatan'])->group(function () {
     Route::get('/kecamatan/reports/{id}', [PemKecamatanController::class, 'show'])->name('kecamatan.reports.show');
     Route::post('/kecamatan/reports/{id}/process', [PemKecamatanController::class, 'process'])->name('kecamatan.reports.process');
     Route::post('/kecamatan/reports/{id}/resolve', [PemKecamatanController::class, 'resolve'])->name('kecamatan.reports.resolve');
-});
+    Route::get('/kecamatan/reports/{id}/pdf', [PemKecamatanController::class, 'exportPdf'])->name('kecamatan.reports.pdf');});

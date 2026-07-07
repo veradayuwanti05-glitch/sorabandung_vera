@@ -25,37 +25,43 @@ class WargaController extends Controller
         return view('warga.create', compact('districts'));
     }
 
-    public function store(Request $request)
+  public function store(Request $request)
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'district_id' => 'required|exists:districts,id',
             'description' => 'required|string',
+            'district_id' => 'required|exists:districts,id',
             'image_before' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'latitude' => 'nullable|string',
+            'longitude' => 'nullable|string',
         ]);
 
-        // Simpan gambar ke folder storage/app/public/reports
-        $imagePath = $request->file('image_before')->store('reports', 'public');
+        $filename = null;
+        if ($request->hasFile('image_before')) {
+            $file = $request->file('image_before');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('assets/reports_entry'), $filename);
+        }
 
         Report::create([
             'user_id' => auth()->id(),
-            'district_id' => $request->district_id,
             'title' => $request->title,
             'description' => $request->description,
-            'image_before' => $imagePath,
+            'district_id' => $request->district_id,
+            'image_before' => $filename, // Selesai! Mengubah 'image' menjadi 'image_before' agar pas dengan database
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
             'status' => 'pending',
         ]);
 
-        return redirect()->route('warga.dashboard')->with('success', 'Laporan aduan Anda berhasil dikirim dan menunggu verifikasi.');
+        return redirect()->route('warga.dashboard')->with('success', 'Laporan Anda berhasil dikirim!');
     }
-
     public function show($id)
     {
         $report = Report::where('user_id', auth()->id())
             ->with(['district', 'resolution'])
             ->findOrFail($id);
 
-        // Diubah menjadi 'warga.show' (tanpa sub-folder reports)
-        return view('warga.show', compact('report'));
+        return view('warga.reports.show', compact('report'));
     }
 }

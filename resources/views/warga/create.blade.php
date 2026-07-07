@@ -43,6 +43,10 @@
                 <div class="card p-4">
                     <form action="{{ route('warga.reports.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
+                        
+                        <!-- Input hidden GPS otomatis -->
+                        <input type="hidden" name="latitude" id="latitude">
+                        <input type="hidden" name="longitude" id="longitude">
 
                         <div class="mb-3">
                             <label for="title" class="form-label fw-bold">Judul Laporan / Keluhan</label>
@@ -83,5 +87,17 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    document.getElementById('latitude').value = position.coords.latitude;
+                    document.getElementById('longitude').value = position.coords.longitude;
+                }, function(error) {
+                    console.log("Izin lokasi ditolak atau tidak didukung.");
+                });
+            }
+        });
+    </script>
 </body>
 </html>

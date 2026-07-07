@@ -32,9 +32,12 @@ class AdminPusatController extends Controller
         ]);
 
         $report = Report::findOrFail($id);
+        
+        // Memastikan kolom district_id tetap terjaga sesuai kecamatan tempat kejadian yang dilaporkan warga
         $report->update([
             'status' => 'forwarded',
-            'priority' => $request->priority // Menyimpan tingkat prioritas pilihan admin
+            'priority' => $request->priority,
+            'district_id' => $report->district_id // Menegaskan kembali agar district_id terisi dengan benar di database
         ]);
 
         return redirect()->back()->with('success', 'Laporan berhasil disetujui dan diteruskan ke Kecamatan tujuan.');

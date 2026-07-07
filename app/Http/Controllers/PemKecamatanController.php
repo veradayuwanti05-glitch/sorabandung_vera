@@ -3,72 +3,71 @@
 namespace App\Http\Controllers;
 
 use App\Models\Report;
-use App\Models\Resolution;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PemKecamatanController extends Controller
 {
     public function index()
     {
-        // KUNCI UTAMA: Mengambil ID Kecamatan dari petugas yang sedang login
-        $districtId = auth()->user()->district_id;
+        $districtId = Auth::user()->district_id;
 
-        // Menampilkan laporan yang berstatus 'forwarded', 'process', atau 'resolved' KHUSUS di kecamatan petugas tersebut
+        $totalForwarded = Report::where('district_id', $districtId)->where('status', 'forwarded')->count();
+        $totalProcess = Report::where('district_id', $districtId)->where('status', 'process')->count();
+        $totalResolved = Report::where('district_id', $districtId)->where('status', 'resolved')->count();
+
         $reports = Report::where('district_id', $districtId)
-            ->whereIn('status', ['forwarded', 'process', 'resolved'])
             ->with('user')
             ->latest()
             ->get();
 
-        // Cari tahu nama kecamatan untuk judul halaman (opsional)
-        $districtName = auth()->user()->district ? auth()->user()->district->name : 'Kecamatan';
-
-        return view('kecamatan.dashboard', compact('reports', 'districtName'));
+        return view('kecamatan.dashboard', compact('totalForwarded', 'totalProcess', 'totalResolved', 'reports'));
     }
 
-public function show($id)
+    public function show($id)
     {
-        $districtId = auth()->user()->district_id;
+        $districtId = Auth::user()->district_id;
+        $report = Report::where('district_id', $districtId)->with('user')->findOrFail($id);
 
-        // Memastikan petugas tidak bisa mengintip laporan dari kecamatan lain
-        $report = Report::where('district_id', $districtId)
-            ->with(['user', 'district', 'resolution'])
-            ->findOrFail($id);
-
-        // UBAH BARIS INI: tambahkan .reports. sebelum nama file show
         return view('kecamatan.reports.show', compact('report'));
     }
 
     public function process($id)
     {
-        $report = Report::findOrFail($id);
+        $districtId = Auth::user()->district_id;
+        $report = Report::where('district_id', $districtId)->findOrFail($id);
+        
         $report->update(['status' => 'process']);
 
         return redirect()->back()->with('success', 'Status laporan berhasil diubah menjadi Sedang Diproses.');
     }
+public function exportPdf($id)
+    {
+        $districtId = Auth::user()->district_id;
+        $report = Report::where('district_id', $districtId)->with('user')->findOrFail($id);
 
+        return view('kecamatan.reports.pdf', compact('report'));
+    }
     public function resolve(Request $request, $id)
     {
         $request->validate([
-            'description' => 'required|string',
-            'image_after' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'image_success' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $report = Report::findOrFail($id);
+        $districtId = Auth::user()->district_id;
+        $report = Report::where('district_id', $districtId)->findOrFail($id);
 
-        // Simpan foto bukti penyelesaian
-        $imagePath = $request->file('image_after')->store('resolutions', 'public');
+        if ($request->hasFile('image_success')) {
+            $file = $request->file('image_success');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('assets/reports_success'), $filename);
+            
+            $report->update([
+                'status' => 'resolved',
+                'image_success' => $filename
+            ]);
+        }
 
-        // Buat data resolusi baru
-        Resolution::create([
-            'report_id' => $report->id,
-            'description' => $request->description,
-            'image_after' => $imagePath,
-        ]);
-
-        // Update status laporan menjadi selesai
-        $report->update(['status' => 'resolved']);
-
-        return redirect()->route('kecamatan.dashboard')->with('success', 'Laporan aduan warga telah selesai ditangani.');
+        return redirect()->route('kecamatan.dashboard')->with('success', 'Laporan telah diselesaikan dengan bukti foto lapangan!');
     }
 }
