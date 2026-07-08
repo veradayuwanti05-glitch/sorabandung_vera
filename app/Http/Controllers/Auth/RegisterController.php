@@ -19,16 +19,18 @@ class RegisterController extends Controller
     | validation and creation. By default this controller uses a trait to
     | provide this functionality without requiring any additional code.
     |
+    |
     */
 
     use RegistersUsers;
 
     /**
-     * Where to redirect users after registration.
-     *
-     * @var string
+     * Mengatur arah redirect secara dinamis setelah registrasi berhasil
      */
-    protected $redirectTo = '/home';
+    protected function redirectTo()
+    {
+        return route('warga.dashboard');
+    }
 
     /**
      * Create a new controller instance.
@@ -65,6 +67,7 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'role' => 'warga', // Memastikan pendaftar baru otomatis menjadi warga
         ]);
     }
 }

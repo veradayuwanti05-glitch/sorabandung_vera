@@ -12,41 +12,37 @@ class LoginController extends Controller
     | Login Controller
     |--------------------------------------------------------------------------
     |
-    | Controller ini menangani otentikasi pengguna untuk aplikasi dan
-    | mengarahkan mereka ke halaman dashboard sesuai dengan role masing-masing.
+    | This controller handles authenticating users for the application and
+    | redirecting them to your home screen. The controller uses a trait
+    | to conveniently provide its functionality to your applications.
     |
-    |--------------------------------------------------------------------------
     */
 
     use AuthenticatesUsers;
 
     /**
-     * Membuat instance controller baru.
+     * Mengatur arah redirect login secara dinamis berdasarkan role user
+     */
+    protected function redirectTo()
+    {
+        $role = auth()->user()->role;
+
+        if ($role === 'admin_pusat') {
+            return route('admin.dashboard');
+        } elseif ($role === 'pem_kecamatan') {
+            return route('kecamatan.dashboard');
+        }
+
+        return route('warga.dashboard');
+    }
+
+    /**
+     * Create a new controller instance.
      *
      * @return void
      */
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-        $this->middleware('auth')->only('logout');
-    }
-
-    /**
-     * Menentukan jalur pengalihan setelah pengguna berhasil login.
-     *
-     * @return string
-     */
-    protected function redirectTo()
-    {
-        $role = auth()->user()->role;
-
-        switch ($role) {
-            case 'admin_pusat':
-                return '/admin/dashboard';
-            case 'pem_kecamatan':
-                return '/kecamatan/dashboard';
-            default:
-                return '/warga/dashboard';
-        }
     }
 }
