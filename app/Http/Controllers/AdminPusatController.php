@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+// PERBAIKAN: Request di-import agar fungsinya bisa digunakan[cite: 1]
+use Illuminate\Http\Request; 
 use App\Models\User;
 use App\Models\Report;
+
 // Pastikan model District di-import di atas jika kamu punya modelnya
 // use App\Models\District; 
 
@@ -43,14 +45,28 @@ class AdminPusatController extends Controller
     }
 
     /**
-     * Meneruskan Laporan ke Kecamatan Terkait
+     * METODE YANG DIPERBAIKI:
+     * Meneruskan Laporan ke Kecamatan Terkait + Menyimpan Skala Prioritas
      */
-    public function forward($id)
+    // PERBAIKAN: Menambahkan parameter Request $request agar menangkap data input form[cite: 1]
+    public function forward(Request $request, $id) 
     {
+        // 1. Cari data laporan berdasarkan ID
         $report = Report::findOrFail($id);
-        $report->update(['status' => 'processed']);
+        
+        // 2. Validasi tingkat prioritas yang dikirim dari form (low, normal, urgent)
+        $request->validate([
+            'priority' => 'required|in:low,normal,urgent',
+        ]);
 
-        return redirect()->route('admin.reports.index')->with('success', 'Laporan berhasil diteruskan ke Kecamatan.');
+        // 3. Update status menjadi 'forwarded' DAN menangkap nilai 'priority' langsung dari input form select admin
+        $report->update([
+            'status' => 'forwarded',
+            'priority' => $request->input('priority') // <-- Prioritas tersimpan otomatis ke DB
+        ]);
+
+        // 4. Kembali ke halaman utama admin dengan pesan sukses
+        return redirect()->route('admin.reports.index')->with('success', 'Laporan berhasil diteruskan ke Kecamatan dengan prioritas yang ditentukan.');
     }
 
     /**
@@ -64,13 +80,10 @@ class AdminPusatController extends Controller
         // Jika nama model kamu bukan District, silakan sesuaikan (misal: \App\Models\Kecamatan::all())
         $districts = \App\Models\District::all(); 
         
-        // Sesuai foto: petugas.blade.php ada di dalam folder admin/reports/[cite: 1]
+        // Sesuai foto: petugas.blade.php ada di dalam folder admin/reports/
         return view('admin.reports.petugas', compact('petugas', 'districts'));
     }
 
-    /**
-     * Menyimpan Data Petugas Kecamatan Baru
-     */
     public function petugasStore(Request $request)
     {
         $request->validate([

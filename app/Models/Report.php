@@ -18,6 +18,7 @@ class Report extends Model
         'status',
         'latitude',
         'longitude',
+        'priority',
         'image_before',  // Diizinkan untuk foto laporan awal warga
         'image_success', // Diizinkan untuk foto bukti tuntas dari kecamatan
     ];
