@@ -79,15 +79,12 @@
             {{ $report->description }}
         </div>
     </div>
-
-    <!-- Tombol Aksi Keputusan Admin -->
     <div class="d-flex justify-content-between align-items-center mt-5 pt-3 border-top">
         <a href="{{ route('admin.reports.index') }}" class="btn btn-light rounded-3 fw-medium text-secondary">
             <i class="bi bi-arrow-left me-1"></i> Kembali
         </a>
         
         <div class="d-flex gap-3">
-            <!-- Form Jika Laporan TIDAK SESUAI (Tolak) -->
             <form action="{{ route('admin.reports.tolak', $report->id) }}" method="POST">
                 @csrf
                 @method('PUT')
@@ -95,8 +92,6 @@
                     <i class="bi bi-x-circle me-1"></i> Tidak Sesuai (Tolak)
                 </button>
             </form>
-
-            <!-- Form Jika Laporan BENAR (Kirim ke Kecamatan) -->
             <form action="{{ route('admin.reports.kirim', $report->id) }}" method="POST">
                 @csrf
                 @method('PUT')

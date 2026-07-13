@@ -103,8 +103,6 @@
     </style>
 </head>
 <body>
-
-    <!-- Navbar Minimalis Berwarna Pastel -->
     <nav class="navbar custom-navbar mb-5">
         <div class="container">
             <div class="d-flex align-items-center gap-3">
@@ -126,7 +124,6 @@
         </div>
     </nav>
 
-    <!-- Konten Utama -->
     <div class="container">
         <div class="row">
             <div class="col-12 col-lg-11 mx-auto">
@@ -157,8 +154,6 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     @endif
-
-                    <!-- Tabel Riwayat Laporan -->
                     <div class="table-responsive-custom">
                         <div class="d-flex align-items-center gap-2 mb-3">
                             <i class="bi bi-clock-history text-primary fs-5"></i>

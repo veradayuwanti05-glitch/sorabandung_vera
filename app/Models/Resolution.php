@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Resolution extends Model
 {
-    // Tambahkan baris ini agar semua kolom diizinkan untuk diisi data
     protected $fillable = [
         'report_id',
         'description',

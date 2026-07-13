@@ -8,202 +8,96 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
+            --pastel-blue: #e0f2fe;
+            --soft-white: #f8fafc;
+            --brand-blue: #38bdf8;
             --brand-dark: #0f172a;
-            --brand-primary: #2563eb;
-            --brand-gradient: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #3b82f6 100%);
-            --surface-light: #f8fafc;
         }
 
         body {
-            background-color: var(--surface-light);
+             background: linear-gradient(135deg, #87cbf9 0%, #f6f8fa 50%, #ffffff 100%);
             font-family: 'Plus Jakarta Sans', sans-serif;
             color: #334155;
-            overflow-x: hidden;
+            min-height: 100vh;
         }
 
         .navbar {
-            background: rgba(248, 250, 252, 0.8) !important;
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
-            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.7) !important;
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(186, 230, 253, 0.5);
         }
 
         .navbar-brand {
             font-weight: 800;
             font-size: 1.5rem;
-            letter-spacing: -0.5px;
-            background: var(--brand-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .nav-btn-login {
-            color: #475569;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: color 0.2s;
-        }
-
-        .nav-btn-login:hover {
-            color: var(--brand-primary);
+            color: var(--brand-blue);
         }
 
         .hero-wrapper {
-            position: relative;
-            padding: 140px 0 100px 0;
-            background: radial-gradient(100% 100% at 50% 0%, rgba(37, 99, 235, 0.05) 0%, rgba(248, 250, 252, 0) 100%);
+            padding: 120px 0;
         }
 
         .hero-badge {
-            background: rgba(37, 99, 235, 0.08);
-            color: var(--brand-primary);
+            background: #ffffff;
+            color: var(--brand-blue);
             font-weight: 700;
-            font-size: 0.8rem;
-            padding: 8px 16px;
-            border-radius: 100px;
-            letter-spacing: 0.5px;
+            font-size: 0.75rem;
+            padding: 8px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.1);
             display: inline-block;
+            margin-bottom: 20px;
         }
 
         .hero-title {
             font-weight: 800;
             font-size: 3.5rem;
-            line-height: 1.15;
             color: var(--brand-dark);
-            letter-spacing: -1.5px;
+            letter-spacing: -2px;
         }
 
         .hero-title span {
-            background: var(--brand-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--brand-blue);
         }
 
-        .hero-desc {
-            font-size: 1.15rem;
-            color: #64748b;
-            line-height: 1.6;
-            max-width: 680px;
-            margin: 0 auto;
-        }
-
-        .btn-premium-solid {
-            background: var(--brand-dark);
+        .btn-custom-solid {
+            background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
             color: white;
             font-weight: 700;
             padding: 14px 32px;
-            border-radius: 14px;
+            border-radius: 16px;
             border: none;
-            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
-            transition: all 0.2s ease;
+            transition: 0.3s;
         }
 
-        .btn-premium-solid:hover {
-            background: var(--brand-primary);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.25);
+        .btn-custom-solid:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3);
             color: white;
-        }
-
-        .btn-premium-outline {
-            background: #ffffff;
-            color: var(--brand-dark);
-            font-weight: 700;
-            padding: 14px 32px;
-            border-radius: 14px;
-            border: 1px solid #e2e8f0;
-            transition: all 0.2s ease;
-        }
-
-        .btn-premium-outline:hover {
-            background: #f1f5f9;
-            border-color: #cbd5e1;
-            transform: translateY(-2px);
-            color: var(--brand-dark);
-        }
-
-        .section-title {
-            font-weight: 800;
-            font-size: 2.25rem;
-            color: var(--brand-dark);
-            letter-spacing: -1px;
-        }
-
-        .flow-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            margin-top: 60px;
-        }
-
-        @media (max-width: 991px) {
-            .flow-grid {
-                grid-template-columns: 1fr;
-            }
-            .hero-title {
-                font-size: 2.5rem;
-            }
         }
 
         .flow-card {
-            background: #ffffff;
-            border: 1px solid rgba(226, 232, 240, 0.7);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
             border-radius: 24px;
-            padding: 40px 30px;
-            position: relative;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 40px;
+            transition: 0.3s;
         }
 
         .flow-card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(37, 99, 235, 0.3);
-            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.04);
-        }
-
-        .flow-number {
-            font-size: 3.5rem;
-            font-weight: 900;
-            line-height: 1;
-            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            position: absolute;
-            top: 30px;
-            right: 30px;
+            transform: translateY(-10px);
+            background: #ffffff;
         }
 
         .flow-icon {
-            width: 56px;
-            height: 56px;
-            background: rgba(37, 99, 235, 0.06);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 24px;
-        }
-
-        .flow-card h5 {
-            font-weight: 700;
-            color: var(--brand-dark);
-            margin-bottom: 12px;
-        }
-
-        .flow-card p {
-            color: #64748b;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 0;
+            font-size: 2rem;
+            margin-bottom: 20px;
         }
 
         footer {
-            background: #ffffff;
-            border-top: 1px solid #e2e8f0;
             padding: 40px 0;
             color: #94a3b8;
-            font-size: 0.9rem;
-            font-weight: 500;
         }
     </style>
 </head>
@@ -215,17 +109,11 @@
             <div class="ms-auto">
                 @if (Route::has('login'))
                     @auth
-                        @if(auth()->user()->role == 'admin_pusat')
-                            <a href="{{ route('admin.dashboard') }}" class="btn-premium-solid py-2 px-4 fs-6">Dashboard Admin</a>
-                        @elseif(auth()->user()->role == 'pem_kecamatan')
-                            <a href="{{ route('kecamatan.dashboard') }}" class="btn-premium-solid py-2 px-4 fs-6">Dashboard Kecamatan</a>
-                        @else
-                            <a href="{{ route('warga.dashboard') }}" class="btn-premium-solid py-2 px-4 fs-6">Dashboard Warga</a>
-                        @endif
+                        <a href="{{ auth()->user()->role == 'admin_pusat' ? route('admin.dashboard') : (auth()->user()->role == 'pem_kecamatan' ? route('kecamatan.dashboard') : route('warga.dashboard')) }}" class="btn-custom-solid py-2 px-4 fs-6">Dashboard</a>
                     @else
-                        <a href="{{ route('login') }}" class="btn btn-link nav-btn-login text-decoration-none me-4">Masuk</a>
+                        <a href="{{ route('login') }}" class="btn text-secondary fw-bold me-3">Masuk</a>
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="btn-premium-solid py-2 px-4 fs-6">Daftar Akun</a>
+                            <a href="{{ route('register') }}" class="btn-custom-solid py-2 px-4 fs-6">Daftar</a>
                         @endif
                     @endauth
                 @endif
@@ -235,51 +123,46 @@
 
     <section class="hero-wrapper text-center">
         <div class="container">
-            <div class="hero-badge mb-4">PLATFORM INTEGRASI ADUAN WARGA</div>
+            <div class="hero-badge">PLATFORM INTEGRASI ADUAN WARGA</div>
             <h1 class="hero-title mb-4">Satu Ruang Kawal<br><span>Pembangunan Kota</span></h1>
-            <p class="hero-desc mb-5">SuraBandung mendistribusikan setiap aspirasi, kerusakan fasilitas umum, hingga kendala kebersihan langsung ke balaikota dan jajaran tim teknis kecamatan.</p>
+            <p class="hero-desc mb-5 text-secondary">SuraBandung mendistribusikan setiap aspirasi secara real-time langsung ke balaikota dan jajaran tim teknis kecamatan.</p>
             @guest
                 <div class="d-flex justify-content-center gap-3">
-                    <a href="{{ route('register') }}" class="btn-premium-solid text-decoration-none">Buat Laporan Sekarang</a>
-                    <a href="{{ route('login') }}" class="btn-premium-outline text-decoration-none">Pantau Progress</a>
+                    <a href="{{ route('register') }}" class="btn-custom-solid">Buat Laporan Sekarang</a>
                 </div>
             @endguest
         </div>
     </section>
 
-    <main class="container my-5 py-5">
-        <div class="text-center">
-            <h3 class="section-title mb-2">Alur Distribusi Laporan</h3>
-            <p class="text-muted">Bagaimana sistem kami bekerja memastikan aduan Anda dieksekusi</p>
-        </div>
-        
-        <div class="flow-grid">
-            <div class="flow-card">
-                <div class="flow-number">01</div>
-                <div class="flow-icon">✍️</div>
-                <h5>Sampaikan Aspirasi</h5>
-                <p>Warga mengisi form laporan digital disertai penandaan lokasi wilayah dan bukti lampiran visual secara real-time.</p>
+    <main class="container my-5">
+        <div class="flow-grid row g-4">
+            <div class="col-md-4">
+                <div class="flow-card text-center">
+                    <div class="flow-icon">✍️</div>
+                    <h5 class="fw-bold">Sampaikan Aspirasi</h5>
+                    <p class="small text-muted">Warga mengisi form laporan digital dengan bukti lampiran visual.</p>
+                </div>
             </div>
-            
-            <div class="flow-card">
-                <div class="flow-number">02</div>
-                <div class="flow-icon">🏢</div>
-                <h5>Tinjau & Validasi</h5>
-                <p>Pemerintah Kota memverifikasi laporan, menyaring keabsahan data, lalu menentukan bobot tingkat kedaruratan kasus.</p>
+            <div class="col-md-4">
+                <div class="flow-card text-center">
+                    <div class="flow-icon">🏢</div>
+                    <h5 class="fw-bold">Tinjau & Validasi</h5>
+                    <p class="small text-muted">Pemerintah Kota memverifikasi laporan dan menentukan tingkat kedaruratan.</p>
+                </div>
             </div>
-
-            <div class="flow-card">
-                <div class="flow-number">03</div>
-                <div class="flow-icon">🛠️</div>
-                <h5>Eksekusi Wilayah</h5>
-                <p>Aparatur kecamatan menerima delegasi tugas, memobilisasi tim lapangan, kemudian menutup berkas dengan bukti perbaikan.</p>
+            <div class="col-md-4">
+                <div class="flow-card text-center">
+                    <div class="flow-icon">🛠️</div>
+                    <h5 class="fw-bold">Eksekusi Wilayah</h5>
+                    <p class="small text-muted">Aparatur kecamatan memobilisasi tim lapangan hingga perbaikan tuntas.</p>
+                </div>
             </div>
         </div>
     </main>
 
     <footer class="text-center">
         <div class="container">
-            <p class="mb-0">&copy; 2026 SuraBandung Core. Mengawal Pembenahan Ruang Publik Kota.</p>
+            <p class="small">&copy; Mengawal Pembenahan Ruang Publik Kota.</p>
         </div>
     </footer>
 

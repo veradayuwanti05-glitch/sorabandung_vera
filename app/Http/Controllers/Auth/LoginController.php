@@ -20,9 +20,6 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
 
-    /**
-     * Mengatur arah redirect login secara dinamis berdasarkan role user
-     */
     protected function redirectTo()
     {
         $role = auth()->user()->role;

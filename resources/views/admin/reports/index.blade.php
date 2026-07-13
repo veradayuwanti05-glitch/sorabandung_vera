@@ -16,8 +16,6 @@
             background-color: #f4f6fa; 
             color: #1e293b;
         }
-
-        /* NAVBAR - SOFT MINT ICE WITH INDIGO ACCENT */
         .custom-navbar {
             background: linear-gradient(90deg, #e0f2fe 0%, #f0fdf4 100%);
             border-bottom: 2px solid #bae6fd;
@@ -247,7 +245,6 @@
                             <td class="text-center">
                                 @if($report->status == 'pending')
                                     <div class="d-flex gap-2 justify-content-center align-items-center">
-                                        <!-- Tombol Baru: Lihat Berkas untuk Verifikasi Awal Laporan Warga -->
                                         <a href="{{ route('admin.reports.show', $report->id) }}" class="btn btn-sm btn-view text-nowrap">
                                             <i class="bi bi-eye-fill me-1"></i> Lihat Berkas
                                         </a>

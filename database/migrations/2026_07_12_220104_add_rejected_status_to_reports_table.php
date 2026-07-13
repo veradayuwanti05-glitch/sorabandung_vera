@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema; // Hapus angka 5 di sini jadi 'Support' saja
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {

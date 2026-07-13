@@ -64,7 +64,6 @@
                 </div>
 
                 <div class="row g-4">
-                    <!-- Bukti Awal Warga -->
                     <div class="col-md-6">
                         <div class="card p-3 text-center">
                             <h6 class="fw-bold text-danger mb-3">📸 Kondisi Awal (Laporan)</h6>
@@ -76,7 +75,6 @@
                         </div>
                     </div>
 
-                    <!-- Bukti Penyelesaian Kecamatan -->
                     <div class="col-md-6">
                         <div class="card p-3 text-center">
                             <h6 class="fw-bold text-success mb-3">📸 Hasil Penanganan (Kecamatan)</h6>

@@ -10,10 +10,8 @@ class WargaController extends Controller
 {
     public function index()
     {
-        // Mengambil semua laporan milik warga yang sedang login
         $reports = Report::where('user_id', auth()->id())->with('district')->latest()->get();
         
-        // PASTIKAN DI SINI: Diubah dari 'warga.reports.dashboard' atau 'warga.index' menjadi 'warga.dashboard'
         return view('warga.dashboard', compact('reports'));
     }
 
@@ -21,7 +19,6 @@ class WargaController extends Controller
     {
         $districts = District::all();
         
-        // Diubah menjadi 'warga.create' (tanpa sub-folder reports)
         return view('warga.create', compact('districts'));
     }
 
@@ -48,7 +45,7 @@ class WargaController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'district_id' => $request->district_id,
-            'image_before' => $filename, // Selesai! Mengubah 'image' menjadi 'image_before' agar pas dengan database
+            'image_before' => $filename, 
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
             'status' => 'pending',
@@ -58,7 +55,6 @@ class WargaController extends Controller
     }
     public function edit($id)
 {
-    // Pastikan laporan milik warga yang login dan statusnya memang ditolak
     $report = Report::where('user_id', auth()->id())->findOrFail($id);
 
     if ($report->status !== 'rejected') {
@@ -68,7 +64,6 @@ class WargaController extends Controller
     return view('warga.reports.edit', compact('report'));
 }
 
-// 2. Fungsi memproses update data dan mereset status menjadi pending
 public function update(Request $request, $id)
 {
     $report = Report::where('user_id', auth()->id())->findOrFail($id);
@@ -85,8 +80,8 @@ public function update(Request $request, $id)
     $report->update([
         'title' => $request->title,
         'description' => $request->description,
-        'status' => 'pending', // Otomatis balik jadi PENDING agar diverifikasi ulang oleh admin
-        'tanggapan' => null,   // Alasan penolakan lama dihapus/dibersihkan
+        'status' => 'pending', 
+        'tanggapan' => null,   
     ]);
 
     return redirect()->route('warga.dashboard')->with('success', 'Laporan berhasil diperbaiki dan dikirim ulang!');

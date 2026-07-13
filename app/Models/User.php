@@ -20,7 +20,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'district_id', // PENTING: Mendaftarkan kolom ini agar data kecamatan tersimpan!
+        'district_id', 
     ];
 
     /**
@@ -43,9 +43,7 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    /**
-     * Relasi ke tabel District (Kecamatan wilayah tugas petugas)
-     */
+    
     public function district()
     {
         return $this->belongsTo(District::class, 'district_id');

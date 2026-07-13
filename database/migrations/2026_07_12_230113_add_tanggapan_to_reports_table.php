@@ -9,7 +9,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('reports', function (Blueprint $table) {
-            // Menambahkan kolom tanggapan setelah kolom status, tipenya text karena penolakan bisa panjang
             $table->text('tanggapan')->nullable()->after('status');
         });
     }

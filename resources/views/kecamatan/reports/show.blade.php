@@ -57,7 +57,6 @@
         @endif
 
         <div class="row">
-            <!-- Kolom Kiri: Detail Laporan -->
             <div class="col-md-7 mb-4">
                 <div class="card p-4 h-100">
                     <div class="d-flex justify-content-between align-items-start mb-4">
@@ -101,8 +100,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Kolom Kanan: Panel Aksi -->
             <div class="col-md-5 mb-4">
                 <div class="card p-4">
                     <h5 class="fw-bold mb-3"><i class="bi bi-tools me-2 text-primary"></i>Panel Penanganan</h5>

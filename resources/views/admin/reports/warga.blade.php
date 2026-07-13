@@ -148,8 +148,6 @@
             border-bottom-right-radius: 16px;
             padding-right: 1.5rem;
         }
-        
-        /* Lingkaran Inisial Bergradasi */
         .avatar-circle {
             width: 42px;
             height: 42px;
@@ -295,7 +293,6 @@
                                 <td class="ps-4 text-number">{{ sprintf("%02d", $index + 1) }}</td>
                                 <td>
                                     <div class="d-flex align-items-center gap-3">
-                                        <!-- Warna lingkaran inisial otomatis bergantian -->
                                         <div class="avatar-circle avatar-{{ ($index % 4) + 1 }}">
                                             {{ strtoupper(substr($w->name, 0, 1)) }}
                                         </div>

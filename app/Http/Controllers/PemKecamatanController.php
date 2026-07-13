@@ -8,20 +8,12 @@ use Illuminate\Support\Facades\Auth;
 
 class PemKecamatanController extends Controller
 {
-    /**
-     * Dashboard Utama Wilayah Kecamatan
-     */
     public function index()
     {
-        // Mengunci ID kecamatan berdasarkan akun petugas yang login
         $districtId = Auth::user()->district_id;
-
-        // Menghitung statistik data pengaduan khusus untuk yurisdiksi kecamatan ini
         $totalForwarded = Report::where('district_id', $districtId)->where('status', 'forwarded')->count();
         $totalProcess = Report::where('district_id', $districtId)->where('status', 'process')->count();
         $totalResolved = Report::where('district_id', $districtId)->where('status', 'resolved')->count();
-
-        // Mengambil semua aduan yang ditujukan ke kecamatan ini beserta data pelapornya
         $reports = Report::where('district_id', $districtId)
             ->with('user')
             ->latest()
@@ -29,23 +21,15 @@ class PemKecamatanController extends Controller
 
         return view('kecamatan.dashboard', compact('totalForwarded', 'totalProcess', 'totalResolved', 'reports'));
     }
-
-    /**
-     * Membuka Detail Berkas Pengaduan
-     */
     public function show($id)
     {
         $districtId = Auth::user()->district_id;
         
-        // Memastikan petugas tidak bisa mengintip berkas aduan dari kecamatan lain
         $report = Report::where('district_id', $districtId)->with('user')->findOrFail($id);
 
         return view('kecamatan.reports.show', compact('report'));
     }
 
-    /**
-     * Mengubah Status Laporan Menjadi Sedang Diproses
-     */
     public function process($id)
     {
         $districtId = Auth::user()->district_id;
@@ -56,9 +40,6 @@ class PemKecamatanController extends Controller
         return redirect()->back()->with('success', 'Status laporan berhasil diubah menjadi Sedang Diproses.');
     }
 
-    /**
-     * Cetak Laporan ke Dokumen View PDF
-     */
     public function exportPdf($id)
     {
         $districtId = Auth::user()->district_id;
@@ -67,9 +48,6 @@ class PemKecamatanController extends Controller
         return view('kecamatan.reports.pdf', compact('report'));
     }
 
-    /**
-     * Menyelesaikan Laporan dengan Mengunggah Bukti Foto Lapangan
-     */
     public function resolve(Request $request, $id)
     {
         $request->validate([

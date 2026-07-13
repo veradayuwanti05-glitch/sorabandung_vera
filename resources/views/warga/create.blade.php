@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buat Aduan Baru - SuraBandung</title>
-    <!-- Google Fonts & Bootstrap 5 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -100,7 +99,7 @@
 </head>
 <body>
 
-    <!-- Navbar Minimalis Pastel -->
+    
     <nav class="navbar custom-navbar mb-5">
         <div class="container">
             <div class="d-flex align-items-center gap-3">
@@ -117,7 +116,6 @@
         </div>
     </nav>
 
-    <!-- Konten Utama Form Input -->
     <div class="container mb-5">
         <div class="create-container">
             <div class="d-flex align-items-center gap-3 mb-4">
@@ -145,7 +143,6 @@
             <form action="{{ route('warga.reports.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 
-                <!-- Input hidden GPS otomatis -->
                 <input type="hidden" name="latitude" id="latitude">
                 <input type="hidden" name="longitude" id="longitude">
 

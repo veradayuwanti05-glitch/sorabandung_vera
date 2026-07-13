@@ -144,8 +144,6 @@
             @endif
 
             <hr class="opacity-10 mb-4">
-
-            {{-- UPDATE: Menambahkan enctype agar form bisa upload file baru --}}
             <form action="{{ route('warga.reports.update', $report->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
@@ -153,7 +151,6 @@
                 <div class="mb-4 text-center bg-light p-3 rounded-4 border border-dashed">
                     <label class="form-label d-block text-start mb-2"><i class="bi bi-image me-1"></i> Foto Bukti Laporan</label>
                     
-                    {{-- Bagian menampilkan foto lama (jika ada) --}}
                     @if($report->image)
                         <div class="mb-3">
                             <img src="{{ asset('assets/reports_entry/' . $report->image) }}" 
@@ -162,13 +159,10 @@
                                  style="max-height: 250px; object-fit: cover;">
                         </div>
                     @else
-                        {{-- Tampilan jika data foto di database NULL/Kosong --}}
                         <div class="py-3 text-muted small">
                             <i class="bi bi-image-alt fs-3 d-block mb-1"></i> Tidak ada foto bukti yang dilampirkan sebelumnya.
                         </div>
                     @endif
-
-                    {{-- UPDATE: Menambahkan input file agar bisa upload foto baru --}}
                     <div class="mt-3 text-start">
                         <label for="image" class="form-label text-muted small mb-1">Unggah Foto Baru (Opsional)</label>
                         <input class="form-control form-control-sm @error('image') is-invalid @enderror" 

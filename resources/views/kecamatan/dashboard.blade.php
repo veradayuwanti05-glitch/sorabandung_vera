@@ -192,8 +192,6 @@
             border-bottom-right-radius: 16px;
             padding-right: 20px;
         }
-
-        /* Badges Pastel */
         .badge-custom {
             font-weight: 600;
             font-size: 0.8rem;
@@ -218,7 +216,6 @@
         .status-primary { background: var(--pastel-blue); color: var(--text-blue); }
         .status-green { background: var(--pastel-green); color: var(--text-green); }
 
-        /* Muted Pastel Action Button */
         .btn-action {
             background: linear-gradient(135deg, #64748b 0%, #475569 100%);
             color: #ffffff;
