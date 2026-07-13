@@ -9,7 +9,6 @@ class Report extends Model
 {
     use HasFactory;
 
-    // Mendaftarkan kolom agar diizinkan menyimpan data ke database
     protected $fillable = [
         'user_id',
         'title',
@@ -18,24 +17,22 @@ class Report extends Model
         'status',
         'latitude',
         'longitude',
+        'tanggapan',
         'priority',
-        'image_before',  // Diizinkan untuk foto laporan awal warga
-        'image_success', // Diizinkan untuk foto bukti tuntas dari kecamatan
+        'image_before',  
+        'image_success', 
     ];
 
-    // Relasi ke tabel User (Warga yang melapor)
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // Relasi ke tabel District (Kecamatan wilayah aduan)
     public function district()
     {
         return $this->belongsTo(District::class);
     }
 
-    // Relasi ke tabel Resolution (Jika ada data detail penyelesaian terpisah)
     public function resolution()
     {
         return $this->hasOne(Resolution::class);

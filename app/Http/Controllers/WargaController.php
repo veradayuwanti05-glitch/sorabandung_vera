@@ -56,6 +56,41 @@ class WargaController extends Controller
 
         return redirect()->route('warga.dashboard')->with('success', 'Laporan Anda berhasil dikirim!');
     }
+    public function edit($id)
+{
+    // Pastikan laporan milik warga yang login dan statusnya memang ditolak
+    $report = Report::where('user_id', auth()->id())->findOrFail($id);
+
+    if ($report->status !== 'rejected') {
+        return redirect()->route('warga.dashboard')->with('error', 'Laporan ini tidak dapat diedit.');
+    }
+
+    return view('warga.reports.edit', compact('report'));
+}
+
+// 2. Fungsi memproses update data dan mereset status menjadi pending
+public function update(Request $request, $id)
+{
+    $report = Report::where('user_id', auth()->id())->findOrFail($id);
+
+    if ($report->status !== 'rejected') {
+        return redirect()->route('warga.dashboard')->with('error', 'Laporan ini tidak dapat diedit.');
+    }
+
+    $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'required|string',
+    ]);
+
+    $report->update([
+        'title' => $request->title,
+        'description' => $request->description,
+        'status' => 'pending', // Otomatis balik jadi PENDING agar diverifikasi ulang oleh admin
+        'tanggapan' => null,   // Alasan penolakan lama dihapus/dibersihkan
+    ]);
+
+    return redirect()->route('warga.dashboard')->with('success', 'Laporan berhasil diperbaiki dan dikirim ulang!');
+}
     public function show($id)
     {
         $report = Report::where('user_id', auth()->id())

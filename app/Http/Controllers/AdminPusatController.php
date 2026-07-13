@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers;
 
-// PERBAIKAN: Request di-import agar fungsinya bisa digunakan[cite: 1]
 use Illuminate\Http\Request; 
 use App\Models\User;
 use App\Models\Report;
-
-// Pastikan model District di-import di atas jika kamu punya modelnya
-// use App\Models\District; 
 
 class AdminPusatController extends Controller
 {
@@ -21,8 +17,8 @@ class AdminPusatController extends Controller
         $totalReports = Report::count();
         
         $totalPending   = Report::where('status', 'pending')->count();
-        $totalForwarded = Report::where('status', 'processed')->count();
-        $totalProcess   = Report::where('status', 'action')->count();
+        $totalForwarded = Report::where('status', 'forwarded')->count();
+        $totalProcess   = Report::where('status', 'process')->count();
         $totalResolved  = Report::where('status', 'resolved')->count();
         
         return view('admin.dashboard', compact(
@@ -45,27 +41,60 @@ class AdminPusatController extends Controller
     }
 
     /**
-     * METODE YANG DIPERBAIKI:
-     * Meneruskan Laporan ke Kecamatan Terkait + Menyimpan Skala Prioritas
+     * Menampilkan Detail Verifikasi Laporan
      */
-    // PERBAIKAN: Menambahkan parameter Request $request agar menangkap data input form[cite: 1]
+    public function show($id)
+    {
+        // Mengambil data report beserta user dan district
+        $report = Report::with(['user', 'district'])->findOrFail($id);
+        
+        // Kirim ke view admin/reports/show.blade.php
+        return view('admin.reports.show', compact('report'));
+    }
+
+    /**
+     * Fungsi jika laporan BENAR (Diteruskan ke Kecamatan) dari Halaman Detail
+     */
+    public function kirimKeKecamatan($id)
+    {
+        $report = Report::findOrFail($id);
+        $report->update([
+            'status' => 'forwarded'
+        ]);
+
+        return redirect()->route('admin.reports.index')->with('success', 'Laporan valid dan berhasil diteruskan ke Kecamatan!');
+    }
+
+    /**
+     * Fungsi jika laporan TIDAK SESUAI (Ditolak) dari Halaman Detail
+     */
+    public function tolakLaporan($id)
+    {
+        $report = Report::findOrFail($id);
+        $report->update([
+            'status' => 'rejected',
+            'tanggapan' => 'Laporan ditolak oleh Admin Pusat karena data atau bukti yang dilampirkan tidak sesuai.'
+        ]);
+
+        return redirect()->route('admin.reports.index')->with('success', 'Laporan tidak sesuai telah berhasil ditolak.');
+    }
+
+    /**
+     * Meneruskan Laporan dengan Set Prioritas dari Form Tabel Utama (Inline Form)
+     */
     public function forward(Request $request, $id) 
     {
-        // 1. Cari data laporan berdasarkan ID
         $report = Report::findOrFail($id);
         
-        // 2. Validasi tingkat prioritas yang dikirim dari form (low, normal, urgent)
         $request->validate([
             'priority' => 'required|in:low,normal,urgent',
         ]);
 
-        // 3. Update status menjadi 'forwarded' DAN menangkap nilai 'priority' langsung dari input form select admin
         $report->update([
             'status' => 'forwarded',
-            'priority' => $request->input('priority') // <-- Prioritas tersimpan otomatis ke DB
+            'priority' => $request->input('priority')
         ]);
 
-        // 4. Kembali ke halaman utama admin dengan pesan sukses
         return redirect()->route('admin.reports.index')->with('success', 'Laporan berhasil diteruskan ke Kecamatan dengan prioritas yang ditentukan.');
     }
 
@@ -75,15 +104,14 @@ class AdminPusatController extends Controller
     public function petugasIndex()
     {
         $petugas = User::where('role', 'pem_kecamatan')->latest()->get();
-        
-        // PERBAIKAN: Ambil data dari table/model districts agar tidak memicu Undefined Variable di modal
-        // Jika nama model kamu bukan District, silakan sesuaikan (misal: \App\Models\Kecamatan::all())
         $districts = \App\Models\District::all(); 
         
-        // Sesuai foto: petugas.blade.php ada di dalam folder admin/reports/
         return view('admin.reports.petugas', compact('petugas', 'districts'));
     }
 
+    /**
+     * Menyimpan Data Petugas Kecamatan Baru
+     */
     public function petugasStore(Request $request)
     {
         $request->validate([

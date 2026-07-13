@@ -92,6 +92,7 @@
         .badge-forwarded { background-color: #06b6d4; }
         .badge-process { background-color: #f59e0b; }
         .badge-success { background-color: #10b981; }
+        .badge-rejected { background-color: #991b1b; } /* Ditambahkan untuk status ditolak */
         .custom-badge {
             padding: 0.5rem 0.85rem;
             font-weight: 800;
@@ -132,11 +133,26 @@
             border-radius: 8px;
             padding: 0.4rem 1.2rem;
             font-size: 0.875rem;
-            box-shadow: 0 4px 12 rgba(16, 185, 129, 0.25);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
             transition: all 0.2s ease;
         }
         .btn-submit:hover {
             box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4);
+            color: #ffffff;
+        }
+        .btn-view {
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            color: #ffffff;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            padding: 0.4rem 1.2rem;
+            font-size: 0.875rem;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+            transition: all 0.2s ease;
+        }
+        .btn-view:hover {
+            box-shadow: 0 6px 18px rgba(2, 132, 199, 0.4);
             color: #ffffff;
         }
         .priority-box {
@@ -211,6 +227,8 @@
                                     <span class="badge custom-badge badge-forwarded">DITERUSKAN</span>
                                 @elseif($report->status == 'process')
                                     <span class="badge custom-badge badge-process">DIPROSES</span>
+                                @elseif($report->status == 'rejected')
+                                    <span class="badge custom-badge badge-rejected">DITOLAK</span>
                                 @else
                                     <span class="badge custom-badge badge-success">SELESAI</span>
                                 @endif
@@ -222,19 +240,34 @@
                                     <div class="priority-box p-normal">🔵 Normal</div>
                                 @elseif($report->priority == 'urgent')
                                     <div class="priority-box p-urgent">🔴 Darurat</div>
+                                @else
+                                    <div class="priority-box p-low">◽ Belum Set</div>
                                 @endif
                             </td>
                             <td class="text-center">
                                 @if($report->status == 'pending')
-                                    <form action="{{ route('admin.reports.forward', $report->id) }}" method="POST" class="d-flex gap-2 justify-content-center">
-                                        @csrf
-                                        <select name="priority" class="form-select form-select-sm custom-select select-normal" style="width: 130px;" onchange="updateSelectColor(this)" required>
-                                            <option value="low">Rendah</option>
-                                            <option value="normal" selected>Normal</option>
-                                            <option value="urgent">Darurat</option>
-                                        </select>
-                                        <button type="submit" class="btn btn-sm btn-submit text-nowrap"><i class="bi bi-cloud-arrow-up-fill me-1"></i> Setujui & Kirim</button>
-                                    </form>
+                                    <div class="d-flex gap-2 justify-content-center align-items-center">
+                                        <!-- Tombol Baru: Lihat Berkas untuk Verifikasi Awal Laporan Warga -->
+                                        <a href="{{ route('admin.reports.show', $report->id) }}" class="btn btn-sm btn-view text-nowrap">
+                                            <i class="bi bi-eye-fill me-1"></i> Lihat Berkas
+                                        </a>
+
+                                        <div class="vr bg-secondary opacity-25" style="height: 24px;"></div>
+
+                                        <form action="{{ route('admin.reports.forward', $report->id) }}" method="POST" class="d-flex gap-2">
+                                            @csrf
+                                            <select name="priority" class="form-select form-select-sm custom-select select-normal" style="width: 110px;" onchange="updateSelectColor(this)" required>
+                                                <option value="low">Rendah</option>
+                                                <option value="normal" selected>Normal</option>
+                                                <option value="urgent">Darurat</option>
+                                            </select>
+                                            <button type="submit" class="btn btn-sm btn-submit text-nowrap"><i class="bi bi-cloud-arrow-up-fill me-1"></i> Kirim</button>
+                                        </form>
+                                    </div>
+                                @elseif($report->status == 'rejected')
+                                    <span class="badge bg-danger-subtle text-danger border px-3 py-2 fw-bold" style="border-radius: 6px; font-size: 0.8rem; border-color: #fca5a5 !important; display: inline-block;">
+                                        <i class="bi bi-x-circle-fill me-1"></i> Berkas Tidak Sesuai
+                                    </span>
                                 @else
                                     <span class="badge bg-light text-dark border px-3 py-2 fw-bold" style="border-radius: 6px; font-size: 0.8rem; border-color: #cbd5e1 !important; display: inline-block;">
                                         <i class="bi bi-check2-all text-success me-1"></i> Selesai Diproses Wilayah

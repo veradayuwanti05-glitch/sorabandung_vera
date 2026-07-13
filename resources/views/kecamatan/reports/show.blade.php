@@ -4,85 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail Penanganan Laporan - SuraBandung</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
-        body { background-color: #f8f9fa; }
-        .navbar-brand { font-weight: bold; letter-spacing: 1px; }
-        .card { border: none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .foto-bukti { width: 100%; max-height: 350px; object-fit: cover; border-radius: 8px; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #84cbfb 0%, #a9cff4 50%, #ffffff 100%);
+            min-height: 100vh;
+            color: #1e293b;
+        }
+
+        .custom-navbar {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #bae6fd;
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+        }
+        
+        .card { 
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.5); 
+            border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+        }
+
+        .foto-bukti { width: 100%; max-height: 250px; object-fit: cover; border-radius: 12px; }
+        
+        .badge-status { padding: 8px 16px; border-radius: 12px; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; }
+        
+        .btn-action { border-radius: 12px; font-weight: 700; padding: 0.75rem 1rem; transition: all 0.2s; }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <nav class="navbar custom-navbar mb-5">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('kecamatan.dashboard') }}">SuraBandung Kecamatan</a>
-            <div class="ms-auto">
-                <a class="btn btn-sm btn-outline-light" href="{{ route('kecamatan.dashboard') }}">
-                    ← Kembali ke Dashboard
-                </a>
-            </div>
+            <a class="navbar-brand fw-bold text-primary" href="{{ route('kecamatan.dashboard') }}">
+                <i class="bi bi-building-fill me-2"></i>SuraBandung Kecamatan
+            </a>
+            <a class="btn btn-sm btn-outline-secondary px-3" style="border-radius: 10px;" href="{{ route('kecamatan.dashboard') }}">
+                <i class="bi bi-arrow-left me-1"></i> Kembali
+            </a>
         </div>
     </nav>
 
     <div class="container mb-5">
         @if(session('success'))
-            <div class="alert alert-success mb-4">{{ session('success') }}</div>
+            <div class="alert alert-success border-0 shadow-sm rounded-3 mb-4">{{ session('success') }}</div>
         @endif
 
-        <div class="row text-dark">
-            <!-- Kolom Kiri: Informasi Detail Laporan -->
+        <div class="row">
+            <!-- Kolom Kiri: Detail Laporan -->
             <div class="col-md-7 mb-4">
                 <div class="card p-4 h-100">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <h3 class="fw-bold text-primary mb-0">{{ $report->title }}</h3>
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <h4 class="fw-bold text-dark">{{ $report->title }}</h4>
                         <div>
                             @if($report->status == 'forwarded')
-                                <span class="badge bg-warning text-dark px-2.5 py-1.5 fw-bold text-uppercase">⏰ Menunggu Tindakan</span>
+                                <span class="badge-status bg-warning text-dark">⏰ Menunggu</span>
                             @elseif($report->status == 'process')
-                                <span class="badge bg-info text-white px-2.5 py-1.5 fw-bold text-uppercase">⚙️ Sedang Diproses</span>
+                                <span class="badge-status bg-info text-white">⚙️ Diproses</span>
                             @else
-                                <span class="badge bg-success text-white px-2.5 py-1.5 fw-bold text-uppercase">✨ Selesai</span>
+                                <span class="badge-status bg-success text-white">✨ Selesai</span>
                             @endif
                         </div>
                     </div>
 
-                    <p class="text-muted small">
-                        👤 Pelapor: <strong>{{ $report->user->name ?? 'Warga Anonim' }}</strong> | 
-                        📅 Masuk: {{ $report->created_at->format('d M Y H:i') }}
+                    <p class="text-muted small mb-4">
+                        <i class="bi bi-person-fill"></i> {{ $report->user->name ?? 'Warga Anonim' }} | 
+                        <i class="bi bi-calendar-event"></i> {{ $report->created_at->format('d M Y, H:i') }}
                     </p>
                     
-                    <hr>
-                    
-                    <h6 class="fw-bold mb-2">Isi Keluhan/Aduan:</h6>
-                    <p class="text-secondary mb-4" style="white-space: pre-line;">{{ $report->description }}</p>
-
-                    @if($report->latitude && $report->longitude)
-                        <div class="p-3 bg-light rounded border mb-4">
-                            <span class="text-muted small d-block">📍 Koordinat Lokasi (GPS):</span>
-                            <a href="https://www.google.com/maps/search/?api=1&query={{ $report->latitude }},{{ $report->longitude }}" target="_blank" class="fw-bold text-decoration-none small">
-                                {{ $report->latitude }}, {{ $report->longitude }} 🌐 (Buka di Google Maps)
-                            </a>
-                        </div>
-                    @endif
+                    <div class="bg-light p-3 rounded-3 mb-4 border border-light-subtle">
+                        <h6 class="fw-bold text-muted small text-uppercase mb-2">Isi Aduan:</h6>
+                        <p class="text-secondary mb-0" style="white-space: pre-line;">{{ $report->description }}</p>
+                    </div>
 
                     <div class="row g-3">
-                        <div class="col-sm-6 text-center">
-                            <span class="d-block small fw-bold text-muted mb-2">FOTO KONDISI AWAL</span>
-                            @if($report->image_before)
-                                <img src="{{ asset('assets/reports_entry/' . $report->image_before) }}" class="foto-bukti border" alt="Foto Awal">
-                            @else
-                                <div class="py-5 bg-light text-muted border rounded small">Tidak ada foto awal</div>
-                            @endif
+                        <div class="col-6 text-center">
+                            <label class="small fw-bold text-muted d-block mb-2">KONDISI AWAL</label>
+                            <img src="{{ asset('assets/reports_entry/' . $report->image_before) }}" class="foto-bukti shadow-sm" alt="Foto Awal">
                         </div>
-
-                        <div class="col-sm-6 text-center">
-                            <span class="d-block small fw-bold text-muted mb-2">FOTO BUKTI SELESAI</span>
+                        <div class="col-6 text-center">
+                            <label class="small fw-bold text-muted d-block mb-2">HASIL PENANGANAN</label>
                             @if($report->image_success)
-                                <img src="{{ asset('assets/reports_success/' . $report->image_success) }}" class="foto-bukti border" alt="Foto Selesai">
+                                <img src="{{ asset('assets/reports_success/' . $report->image_success) }}" class="foto-bukti shadow-sm" alt="Foto Selesai">
                             @else
-                                <div class="py-5 bg-light text-muted border rounded small d-flex align-items-center justify-content-center h-100" style="min-height: 150px;">
-                                    <span>Belum rampung dikerjakan</span>
+                                <div class="foto-bukti bg-light d-flex align-items-center justify-content-center text-muted border border-dashed">
+                                    <small>Menunggu pengerjaan</small>
                                 </div>
                             @endif
                         </div>
@@ -90,41 +102,33 @@
                 </div>
             </div>
 
-            <!-- Kolom Kanan: Panel Aksi Penanganan Petugas -->
+            <!-- Kolom Kanan: Panel Aksi -->
             <div class="col-md-5 mb-4">
                 <div class="card p-4">
-                    <h5 class="fw-bold mb-3">Panel Penanganan Petugas</h5>
+                    <h5 class="fw-bold mb-3"><i class="bi bi-tools me-2 text-primary"></i>Panel Penanganan</h5>
                     <hr>
 
                     @if($report->status == 'forwarded')
-                        <!-- Langkah 1: Ubah status ke proses -->
-                        <p class="text-muted small">Laporan ini baru saja diteruskan dari pusat. Silakan konfirmasi ke sistem bahwa tim kecamatan bersiap meninjau lapangan.</p>
+                        <p class="text-muted small">Laporan telah diterima. Tekan tombol di bawah untuk memulai proses perbaikan.</p>
                         <form action="{{ route('kecamatan.reports.process', $report->id) }}" method="POST">
                             @csrf
-                            <button type="submit" class="btn btn-primary w-100 fw-bold py-2.5">⚙️ Ambil & Proses Laporan</button>
+                            <button type="submit" class="btn btn-primary w-100 btn-action">⚙️ Ambil & Proses Laporan</button>
                         </form>
-
                     @elseif($report->status == 'process')
-                        <!-- Langkah 2: Upload bukti penanganan jika sudah selesai -->
-                        <p class="text-muted small">Laporan dalam penanganan tim lapangan. Jika perbaikan fasilitas publik telah tuntas, upload foto bukti penyelesaian di bawah ini:</p>
-                        
+                        <p class="text-muted small">Laporan sedang ditangani. Upload foto hasil akhir setelah perbaikan selesai.</p>
                         <form action="{{ route('kecamatan.reports.resolve', $report->id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-3">
-                                <label for="image_success" class="form-label small fw-bold">Foto Bukti Hasil Lapangan</label>
-                                <input type="file" class="form-control" id="image_success" name="image_success" accept="image/*" required>
-                                <div class="form-text text-muted small">Wajib menyertakan foto hasil akhir penanganan (Format: jpg, jpeg, png, maks 2MB).</div>
+                                <label class="form-label small fw-bold">Unggah Foto Hasil Akhir</label>
+                                <input type="file" class="form-control" name="image_success" required>
                             </div>
-                            <button type="submit" class="btn btn-success w-100 fw-bold py-2.5">✓ Laporkan Penyelesaian Akhir</button>
+                            <button type="submit" class="btn btn-success w-100 btn-action">✓ Laporkan Selesai</button>
                         </form>
-
                     @else
-                        <!-- Selesai -->
-                        <div class="alert alert-success mb-0 text-center py-3">
-                            <h5 class="alert-heading fw-bold mb-1">✨ Tugas Tuntas!</h5>
-                            <p class="small mb-2">Laporan pengaduan ini telah berhasil ditangani oleh pihak kecamatan dan statusnya ditutup.</p>
-                            <a href="{{ route('kecamatan.reports.pdf', $report->id) }}" target="_blank" class="btn btn-sm btn-outline-success fw-bold px-3">
-                                🖨️ Cetak Dokumen PDF
+                        <div class="text-center py-3 bg-success bg-opacity-10 rounded-3">
+                            <h6 class="text-success fw-bold">✨ Tugas Tuntas!</h6>
+                            <a href="{{ route('kecamatan.reports.pdf', $report->id) }}" target="_blank" class="btn btn-sm btn-success mt-2">
+                                <i class="bi bi-printer-fill me-1"></i> Cetak PDF
                             </a>
                         </div>
                     @endif
